@@ -1,16 +1,18 @@
 using BlogService.Application.DependencyInjection;
-using BlogService.Application.Interfaces.Services;
-using BlogService.Application.Services;
-using BlogService.Domain.Interfaces;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Регистрация приложения
-builder.Services.AddApplication();
+builder.Services.AddApplication<long>();
 
 // Регистрация контроллеров
 builder.Services.AddControllers();
+
+builder.Services.AddHttpClient("CommentsClient", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:24130/");
+});
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

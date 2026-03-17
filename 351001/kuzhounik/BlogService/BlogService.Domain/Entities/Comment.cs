@@ -1,10 +1,12 @@
-﻿using BlogService.Domain.Interfaces;
+﻿using Shared.Domain.Interfaces;
 
 namespace BlogService.Domain.Entities;
 
-public class Comment : IEntity<long>
+public class Comment<Id> : IEntity<Id>
 {
-    public long ID { get; set; }
-    public long StoryID { get; set; }
+    public Id ID { get; set; }
+    
+    public Id StoryID { get; set; }
+    
     public string Content { get; set; }
 }

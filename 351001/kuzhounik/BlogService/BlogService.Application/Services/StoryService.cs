@@ -1,19 +1,20 @@
 ﻿using BlogService.Application.DTOs.Request;
 using BlogService.Application.DTOs.Response;
-using BlogService.Application.Interfaces.Mappers;
 using BlogService.Application.Interfaces.Services;
 using BlogService.Domain.Entities;
-using BlogService.Domain.Interfaces;
+using Shared.Application.Interfaces.Mappers;
+using Shared.Application.Services;
+using Shared.Domain.Interfaces;
 
 namespace BlogService.Application.Services;
 
-public class StoryService : BaseService<long, Story, StoryRequestToDto, StoryResponseToDto>, IStoryService
+public class StoryService<Id> : BaseService<Id, Story<Id>, StoryRequestToDto<Id>, StoryResponseToDto<Id>>, IStoryService<Id>
 {
-    public StoryService(IRepository<long, Story> repository,
-        IRequestMapper<StoryRequestToDto, Story> userRequestMapper,
-        IResponseMapper<Story, StoryResponseToDto> userResponseMapper) : base(repository, userRequestMapper, userResponseMapper){ }
+    public StoryService(IRepository<Id, Story<Id>> repository,
+        IRequestMapper<StoryRequestToDto<Id>, Story<Id>> userRequestMapper,
+        IResponseMapper<Story<Id>, StoryResponseToDto<Id>> userResponseMapper) : base(repository, userRequestMapper, userResponseMapper){ }
 
-    public override async Task<StoryResponseToDto> CreateAsync(StoryRequestToDto request)
+    public override async Task<StoryResponseToDto<Id>> CreateAsync(StoryRequestToDto<Id> request)
     {
         var entity = _requestMapper.Map(request);
         entity.Created = DateTime.UtcNow;

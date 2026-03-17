@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <property name="schema" value="distcomp"/>
+
+    <changeSet id="init-postgres-strict" author="valery-kuzh">
+
+        <createTable tableName="tbl_user" schemaName="${schema}">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="login" type="varchar(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(128)"/>
+            <column name="firstname" type="varchar(64)"/>
+            <column name="lastname" type="varchar(64)"/>
+            <column name="created" type="timestamp" defaultValueComputed="NOW()"/>
+            <column name="updated" type="timestamp" defaultValueComputed="NOW()"/>
+        </createTable>
+
+        <createTable tableName="tbl_story" schemaName="${schema}">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_story_user"
+                             referencedTableName="tbl_user" referencedColumnNames="id"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="content" type="text"/>
+            <column name="created" type="timestamp" defaultValueComputed="NOW()"/>
+            <column name="updated" type="timestamp" defaultValueComputed="NOW()"/>
+        </createTable>
+
+        <createTable tableName="tbl_sticker" schemaName="${schema}">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="text" type="varchar(128)"/> <column name="created" type="timestamp" defaultValueComputed="NOW()"/>
+            <column name="updated" type="timestamp" defaultValueComputed="NOW()"/>
+        </createTable>
+
+        <createTable tableName="tbl_comment" schemaName="${schema}">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="story_id" type="bigint"> <constraints nullable="false" foreignKeyName="fk_comment_story"
+                                                                referencedTableName="tbl_story" referencedColumnNames="id"/>
+            </column>
+            <column name="content" type="text"/>
+            <column name="created" type="timestamp" defaultValueComputed="NOW()"/>
+            <column name="updated" type="timestamp" defaultValueComputed="NOW()"/>
+        </createTable>
+
+        <createTable tableName="tbl_story_sticker" schemaName="${schema}">
+            <column name="story_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_m2m_story"
+                             referencedTableName="tbl_story" referencedColumnNames="id"/>
+            </column>
+            <column name="sticker_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_m2m_sticker"
+                             referencedTableName="tbl_sticker" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="tbl_story_sticker" schemaName="${schema}" columnNames="story_id, sticker_id"/>
+
+    </changeSet>
+</databaseChangeLog>

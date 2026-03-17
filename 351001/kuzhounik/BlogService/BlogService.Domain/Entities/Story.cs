@@ -1,11 +1,11 @@
-﻿using BlogService.Domain.Interfaces;
+﻿using Shared.Domain.Interfaces;
 
 namespace BlogService.Domain.Entities;
 
-public class Story : IEntity<long>
+public class Story<Id> : IEntity<Id>
 {
-    public long ID { get; set; }
-    public long UserID { get; set; }
+    public Id ID { get; set; }
+    public Id UserID { get; set; }
     public string Title { get; set; }
     public string Content { get; set; }
     public DateTime Created { get; set; }

@@ -1,9 +1,9 @@
-﻿using BlogService.Domain.Interfaces;
+﻿using Shared.Domain.Interfaces;
 
 namespace BlogService.Domain.Entities;
 
-public class Sticker : IEntity<long>
+public class Sticker<Id> : IEntity<Id>
 {
-    public long ID { get; set; }
+    public Id ID { get; set; }
     public string Text { get; set; }
 }

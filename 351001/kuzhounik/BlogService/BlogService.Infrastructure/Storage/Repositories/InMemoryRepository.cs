@@ -1,4 +1,4 @@
-﻿using BlogService.Domain.Interfaces;
+﻿using Shared.Domain.Interfaces;
 
 namespace BlogService.Infrastructure.Storage.Repositories;
 

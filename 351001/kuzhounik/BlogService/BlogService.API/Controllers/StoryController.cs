@@ -1,14 +1,14 @@
 ﻿using BlogService.Application.DTOs.Request;
 using BlogService.Application.DTOs.Response;
 using BlogService.Application.Interfaces.Services;
-using BlogService.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Controllers;
 
 namespace BlogService.API.Controllers;
 
 [ApiController]
 [Route("api/v1.0/stories")]
-public class StoryController : BaseController<StoryRequestToDto, StoryResponseToDto>
+public class StoryController : BaseController<long, StoryRequestToDto<long>, StoryResponseToDto<long>>
 {
-    public StoryController(IStoryService service) : base(service) { }
+    public StoryController(IStoryService<long> storyService) : base(storyService) { }
 }

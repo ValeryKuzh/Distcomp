@@ -1,4 +1,6 @@
-﻿namespace Shared.Domain.Interfaces;
+﻿using System.Linq.Expressions;
+
+namespace Shared.Domain.Interfaces;
 
 public interface IRepository<ID, T> where T : class
 {
@@ -7,4 +9,5 @@ public interface IRepository<ID, T> where T : class
     Task AddAsync(T entity);
     Task UpdateAsync(T entity);
     Task DeleteAsync(ID id);
+    Task<bool> ExistsAsync(Expression<Func<T, bool>> condition);
 }

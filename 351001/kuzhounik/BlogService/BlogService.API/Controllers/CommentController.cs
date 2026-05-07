@@ -10,11 +10,13 @@ namespace BlogService.API.Controllers;
 public class CommentController : BaseController<long, CommentRequestToDto<long>, CommentResponseToDto<long>>
 {
     private readonly HttpClient _httpClient;
+    private readonly IStoryService<long> _storyService;
 
-    public CommentController(ICommentService<long> commentService, IHttpClientFactory httpClientFactory) 
+    public CommentController(ICommentService<long> commentService, IStoryService<long> storyService, IHttpClientFactory httpClientFactory) 
         : base(commentService) 
     {
         _httpClient = httpClientFactory.CreateClient();
+        _storyService = storyService;
         _httpClient.BaseAddress = new Uri("http://localhost:24130/api/v1.0/comments/");
     }
     
@@ -45,11 +47,35 @@ public class CommentController : BaseController<long, CommentRequestToDto<long>,
                ?? Array.Empty<CommentResponseToDto<long>>();
     }
     
+    // [HttpPost]
+    // public override async Task<ActionResult<CommentResponseToDto<long>>> Create([FromBody] CommentRequestToDto<long> request)
+    // {
+    //     var response = await _httpClient.PostAsJsonAsync("", request);
+    //     response.EnsureSuccessStatusCode();
+    //
+    //     var result = await response.Content.ReadFromJsonAsync<CommentResponseToDto<long>>();
+    //     return Created(string.Empty, result);
+    // }
+    
     [HttpPost]
     public override async Task<ActionResult<CommentResponseToDto<long>>> Create([FromBody] CommentRequestToDto<long> request)
     {
+        var story = await _storyService.GetAsync(request.StoryID);
+        
+        if (story == null)
+        {
+            return BadRequest(new { 
+                message = "Validation Error: Story association not found.",
+                statusCode = 400 
+            });
+        }
+
         var response = await _httpClient.PostAsJsonAsync("", request);
-        response.EnsureSuccessStatusCode();
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            return StatusCode((int)response.StatusCode);
+        }
 
         var result = await response.Content.ReadFromJsonAsync<CommentResponseToDto<long>>();
         return Created(string.Empty, result);

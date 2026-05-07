@@ -13,4 +13,5 @@ public class CommentService<Id> : BaseService<Id, Comment<Id>, CommentRequestToD
     public CommentService(IRepository<Id, Comment<Id>> repository,
         IRequestMapper<CommentRequestToDto<Id>, Comment<Id>> userRequestMapper,
         IResponseMapper<Comment<Id>, CommentResponseToDto<Id>> userResponseMapper) : base(repository, userRequestMapper, userResponseMapper){ }
+    
 }

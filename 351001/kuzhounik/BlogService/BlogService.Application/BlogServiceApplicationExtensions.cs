@@ -5,7 +5,11 @@ using BlogService.Application.Interfaces.Services;
 using BlogService.Application.Mappers;
 using BlogService.Application.Services;
 using BlogService.Domain.Entities;
+using BlogService.Infrastructure.PostgreSQL.Context;
+using BlogService.Infrastructure.PostgreSQL.Repositories;
 using BlogService.Infrastructure.Storage.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Shared.Application.Interfaces.Mappers;
 using Shared.Domain.Interfaces;
 
@@ -13,11 +17,8 @@ namespace BlogService.Application.DependencyInjection;
 
 public static class BlogServiceApplicationExtensions
 {
-    public static IServiceCollection AddApplication<Id>(this IServiceCollection services)
+    public static IServiceCollection AddApplication<Id>(this IServiceCollection services, IConfiguration configuration) where Id : notnull
     {
-        // Репозиторий
-        services.AddSingleton(typeof(IRepository<,>), typeof(InMemoryRepository<,>));
-
         // Сервисы
         services.AddScoped<IUserService<Id>, UserService<Id>>();
         services.AddScoped<IStoryService<Id>, StoryService<Id>>();
@@ -36,6 +37,14 @@ public static class BlogServiceApplicationExtensions
         
         services.AddScoped<IRequestMapper<StickerRequestToDto<Id>, Sticker<Id>>, StickerMapper<Id>>();
         services.AddScoped<IResponseMapper<Sticker<Id>, StickerResponseToDto<Id>>, StickerMapper<Id>>();
+        
+        // Репозитории
+        //services.AddSingleton(typeof(IRepository<,>), typeof(InMemoryRepository<,>));
+        services.AddScoped(typeof(IRepository<,>), typeof(BlogServiceEFRepository<,>));
+        
+        // Контекст базы данных
+        var connectionString = configuration.GetConnectionString("PostgreSQLConnectionString");
+        services.AddDbContext<BlogServiceDbContext>(options => options.UseNpgsql(connectionString));
         
         return services;
     }

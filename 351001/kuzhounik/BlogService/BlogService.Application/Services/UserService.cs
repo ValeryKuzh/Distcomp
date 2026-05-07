@@ -13,4 +13,12 @@ public class UserService<Id> : BaseService<Id, User<Id>, UserRequestToDto<Id>, U
     public UserService(IRepository<Id, User<Id>> repository,
         IRequestMapper<UserRequestToDto<Id>, User<Id>> userRequestMapper,
         IResponseMapper<User<Id>, UserResponseToDto<Id>> userResponseMapper) : base(repository, userRequestMapper, userResponseMapper){ }
+    
+    protected override async Task OnBeforeCreateAsync(UserRequestToDto<Id> request)
+    {
+        if (await _repository.ExistsAsync(u => u.Login == request.Login))
+        {
+            throw new HttpRequestException("User with the same login already exists");
+        }
+    }
 }

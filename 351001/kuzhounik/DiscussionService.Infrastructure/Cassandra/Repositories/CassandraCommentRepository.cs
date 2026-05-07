@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Cassandra;
 using Cassandra.Mapping;
 using Shared.Domain.Interfaces;
@@ -60,7 +61,12 @@ public class CassandraCommentRepository<Id, Entity> : IRepository<Id, Entity> wh
 
         await _mapper.DeleteAsync(existing);
     }
-    
+
+    public Task<bool> ExistsAsync(Expression<Func<Entity, bool>> condition)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <remarks>
     /// Благодаря тому, что StoryID — это PartitionKey, этот запрос будет выполняться мгновенно
     /// </remarks>

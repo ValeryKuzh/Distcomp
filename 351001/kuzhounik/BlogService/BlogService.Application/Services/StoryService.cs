@@ -10,15 +10,21 @@ namespace BlogService.Application.Services;
 
 public class StoryService<Id> : BaseService<Id, Story<Id>, StoryRequestToDto<Id>, StoryResponseToDto<Id>>, IStoryService<Id>
 {
-    public StoryService(IRepository<Id, Story<Id>> repository,
-        IRequestMapper<StoryRequestToDto<Id>, Story<Id>> userRequestMapper,
-        IResponseMapper<Story<Id>, StoryResponseToDto<Id>> userResponseMapper) : base(repository, userRequestMapper, userResponseMapper){ }
+    private readonly IRepository<Id, User<Id>> _userRepository;
 
-    public override async Task<StoryResponseToDto<Id>> CreateAsync(StoryRequestToDto<Id> request)
+    public StoryService(IRepository<Id, User<Id>> userRepository, IRepository<Id, Story<Id>> repository,
+        IRequestMapper<StoryRequestToDto<Id>, Story<Id>> userRequestMapper,
+        IResponseMapper<Story<Id>, StoryResponseToDto<Id>> userResponseMapper) : base(repository, userRequestMapper,
+        userResponseMapper)
     {
-        var entity = _requestMapper.Map(request);
-        entity.Created = DateTime.UtcNow;
-        await _repository.AddAsync(entity); 
-        return _responseMapper.Map(entity);
+        _userRepository = userRepository;
+    }
+
+    protected override async Task OnBeforeCreateAsync(StoryRequestToDto<Id> request)
+    {
+        if (await _userRepository.GetByIdAsync(request.UserID) == null)
+        {
+            throw new HttpRequestException("User not found");
+        }
     }
 }

@@ -15,7 +15,7 @@ public class StoryMapper<Id> : IRequestMapper<StoryRequestToDto<Id>, Story<Id>>,
             UserID = dto.UserID,
             Title = dto.Title,
             Content = dto.Content,
-            Modified =  DateTime.Now,
+            Modified = DateTime.UtcNow,
         };
     }
 

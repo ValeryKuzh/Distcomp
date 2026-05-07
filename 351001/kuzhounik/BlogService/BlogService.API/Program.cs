@@ -1,10 +1,12 @@
 using BlogService.Application.DependencyInjection;
+using BlogService.Infrastructure.PostgreSQL.Context;
 using Microsoft.OpenApi.Models;
+using Shared.Controllers.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Регистрация приложения
-builder.Services.AddApplication<long>();
+builder.Services.AddApplication<long>(builder.Configuration);
 
 // Регистрация контроллеров
 builder.Services.AddControllers();
@@ -28,6 +30,28 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<BlogServiceDbContext>();
+        
+        // 1. Создаем схему вручную (EF не всегда делает это сам)
+        // context.Database.ExecuteSqlRaw("CREATE SCHEMA IF NOT EXISTS distcomp;");
+        
+        // 2. Создаем таблицы на основе ваших DbSet и OnModelCreating
+        // Это создаст tbl_users, tbl_stickers и т.д.
+        context.Database.EnsureCreated();
+        
+        Console.WriteLine("База данных и таблицы успешно проверены/созданы.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Ошибка при инициализации БД: {ex.Message}");
+    }
+}
+
 // Настройка Middleware
 if (app.Environment.IsDevelopment())
 {
@@ -44,7 +68,9 @@ if (app.Environment.IsProduction())
     app.UseHttpsRedirection();
     app.UseAuthorization();
 }
-        
+
+app.UseMiddleware<HandleErrorMiddleware>(); 
+
 app.MapControllers();
 
 app.Run();

@@ -34,7 +34,7 @@ public abstract class BaseController<Id, RequestDto, ResponseDto> : ControllerBa
     {
         return await _service.GetAllAsync();
     }
-
+    
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -46,7 +46,7 @@ public abstract class BaseController<Id, RequestDto, ResponseDto> : ControllerBa
 
         return Ok(result);
     }
-
+    
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

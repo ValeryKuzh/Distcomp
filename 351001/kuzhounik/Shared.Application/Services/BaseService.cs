@@ -15,6 +15,8 @@ public abstract class BaseService<ID, Entity, RequestDto, ResponseDto>
     protected readonly IRequestMapper<RequestDto, Entity> _requestMapper;
     protected readonly IResponseMapper<Entity, ResponseDto> _responseMapper;
     
+    protected virtual Task OnBeforeCreateAsync(RequestDto request) => Task.CompletedTask;
+    
     protected BaseService(IRepository<ID, Entity> repository,
         IRequestMapper<RequestDto, Entity> requestMapper,
         IResponseMapper<Entity, ResponseDto> responseMapper)
@@ -44,7 +46,7 @@ public abstract class BaseService<ID, Entity, RequestDto, ResponseDto>
         var entities = await _repository.GetAllAsync();
         return entities.Select(entity => _responseMapper.Map(entity));
     }
-
+    
     public virtual async Task<ResponseDto?> UpdateAsync(RequestDto request)
     {
         var existing = await _repository.GetByIdAsync(request.ID);
@@ -52,6 +54,7 @@ public abstract class BaseService<ID, Entity, RequestDto, ResponseDto>
             return null;
 
         var updatedEntity = _requestMapper.Map(request);
+    
         updatedEntity.ID = request.ID;
 
         await _repository.UpdateAsync(updatedEntity);

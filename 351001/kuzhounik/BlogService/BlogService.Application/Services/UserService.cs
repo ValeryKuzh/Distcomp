@@ -13,7 +13,9 @@ public class UserService<Id> : BaseService<Id, User<Id>, UserRequestToDto<Id>, U
 {
     public UserService(IRepository<Id, User<Id>> repository,
         IRequestMapper<UserRequestToDto<Id>, User<Id>> userRequestMapper,
-        IResponseMapper<User<Id>, UserResponseToDto<Id>> userResponseMapper) : base(repository, userRequestMapper, userResponseMapper){ }
+        IResponseMapper<User<Id>, UserResponseToDto<Id>> userResponseMapper, 
+        IDistributedCache cache) : 
+        base(repository, userRequestMapper, userResponseMapper,  cache){ }
     
     protected override async Task OnBeforeCreateAsync(UserRequestToDto<Id> request)
     {

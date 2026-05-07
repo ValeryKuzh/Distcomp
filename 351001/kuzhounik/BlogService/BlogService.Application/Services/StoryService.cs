@@ -15,8 +15,9 @@ public class StoryService<Id> : BaseService<Id, Story<Id>, StoryRequestToDto<Id>
 
     public StoryService(IRepository<Id, User<Id>> userRepository, IRepository<Id, Story<Id>> repository,
         IRequestMapper<StoryRequestToDto<Id>, Story<Id>> userRequestMapper,
-        IResponseMapper<Story<Id>, StoryResponseToDto<Id>> userResponseMapper) : base(repository, userRequestMapper,
-        userResponseMapper)
+        IResponseMapper<Story<Id>, StoryResponseToDto<Id>> userResponseMapper, 
+        IDistributedCache cache) : 
+        base(repository, userRequestMapper, userResponseMapper, cache)
     {
         _userRepository = userRepository;
     }

@@ -13,5 +13,7 @@ public class StickerService<Id> : BaseService<Id, Sticker<Id>, StickerRequestToD
 {
     public StickerService(IRepository<Id, Sticker<Id>> repository,
         IRequestMapper<StickerRequestToDto<Id>, Sticker<Id>> userRequestMapper,
-        IResponseMapper<Sticker<Id>, StickerResponseToDto<Id>> userResponseMapper) : base(repository, userRequestMapper, userResponseMapper) { }
+        IResponseMapper<Sticker<Id>, StickerResponseToDto<Id>> userResponseMapper, 
+        IDistributedCache cache) : 
+        base(repository, userRequestMapper, userResponseMapper, cache) { }
 }

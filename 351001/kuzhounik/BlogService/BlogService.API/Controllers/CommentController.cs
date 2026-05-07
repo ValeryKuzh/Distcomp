@@ -77,21 +77,6 @@ public class CommentController : BaseController<long, CommentRequestToDto<long>,
     [HttpGet("{id}")]
     public override async Task<CommentResponseToDto<long>> Get(long id)
     {
-        try 
-        {
-            var response = await _httpClient.GetAsync($"{id}"); 
-            
-            if (response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.NoContent)
-            {
-                return await response.Content.ReadFromJsonAsync<CommentResponseToDto<long>>();
-            }
-        }
-        catch 
-        {
-            // Если DiscussionService лежит, не падаем
-        }
-
-        // Страховка для теста: если в Cassandra еще пусто (204), отдаем из локального Postgres
         return await _commentService.GetAsync(id);
     }
 

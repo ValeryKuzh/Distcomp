@@ -21,6 +21,12 @@ public static class DiscussionServiceApplicationExtensions
         // Cassandra
         services.AddCassandra(configuration);
 
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = "localhost:6379";
+            options.InstanceName = "DistComp_";
+        });
+        
         // Репозиторий
         services.AddSingleton(typeof(IRepository<Id, Comment<Id>>), typeof(CassandraCommentRepository<Id, Comment<Id>>));
 

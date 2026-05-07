@@ -13,6 +13,9 @@ public class CommentService<Id> : BaseService<Id, Comment<Id>, CommentRequestToD
 {
     public CommentService(IRepository<Id, Comment<Id>> repository,
         IRequestMapper<CommentRequestToDto<Id>, Comment<Id>> userRequestMapper,
-        IResponseMapper<Comment<Id>, CommentResponseToDto<Id>> userResponseMapper) : base(repository, userRequestMapper, userResponseMapper){ }
+        IResponseMapper<Comment<Id>, CommentResponseToDto<Id>> userResponseMapper, 
+        IDistributedCache cache) : 
+        base(repository, userRequestMapper, userResponseMapper, cache){ }
     
+    protected override string GetCacheKey(Id id) => $"Blog:Comment:{id}";
 }

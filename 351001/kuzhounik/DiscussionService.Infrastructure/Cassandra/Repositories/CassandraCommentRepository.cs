@@ -34,12 +34,17 @@ public class CassandraCommentRepository<Id, Entity> : IRepository<Id, Entity> wh
         return await _mapper.FetchAsync<Entity>(); 
     }
 
+    // public async Task AddAsync(Entity entity)
+    // {
+    //     long newId = DateTime.UtcNow.Ticks;
+    //
+    //     ((dynamic)entity).ID = (dynamic)newId;
+    //     
+    //     await _mapper.InsertAsync(entity);
+    // }
+    
     public async Task AddAsync(Entity entity)
     {
-        long newId = DateTime.UtcNow.Ticks;
-
-        ((dynamic)entity).ID = (dynamic)newId;
-        
         await _mapper.InsertAsync(entity);
     }
 

@@ -41,6 +41,7 @@ public class HandleErrorMiddleware
         {
             AlreadyExistsException => HttpStatusCode.Forbidden,
             NotFoundException => HttpStatusCode.NotFound,
+            KeyNotFoundException => HttpStatusCode.NotFound,
             _ => HttpStatusCode.InternalServerError
         };
 

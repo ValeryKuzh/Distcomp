@@ -15,4 +15,6 @@ public class Comment<Id> : IEntity<Id>
     public Story<Id> Story { get; set; }
     [Column("content")]
     public string Content { get; set; }
+    [Column("state")]
+    public string State { get; set; } = "PENDING";
 }

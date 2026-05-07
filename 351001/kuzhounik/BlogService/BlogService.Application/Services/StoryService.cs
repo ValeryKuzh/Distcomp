@@ -2,6 +2,7 @@
 using BlogService.Application.DTOs.Response;
 using BlogService.Application.Interfaces.Services;
 using BlogService.Domain.Entities;
+using Microsoft.Extensions.Caching.Distributed;
 using Shared.Application.Interfaces.Mappers;
 using Shared.Application.Services;
 using Shared.Domain.Interfaces;

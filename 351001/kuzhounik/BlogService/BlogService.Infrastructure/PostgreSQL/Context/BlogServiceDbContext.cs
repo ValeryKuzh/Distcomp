@@ -17,6 +17,8 @@ public class BlogServiceDbContext : DbContext
         //modelBuilder.HasDefaultSchema("distcomp");
         base.OnModelCreating(modelBuilder);
         
+        modelBuilder.HasDefaultSchema("distcomp");
+        
         foreach (var entity in modelBuilder.Model.GetEntityTypes())
         {
             var currentName = entity.GetTableName();

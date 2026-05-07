@@ -5,9 +5,9 @@ using BlogService.Application.Interfaces.Services;
 using BlogService.Application.Mappers;
 using BlogService.Application.Services;
 using BlogService.Domain.Entities;
+using BlogService.Infrastructure.Kafka;
 using BlogService.Infrastructure.PostgreSQL.Context;
 using BlogService.Infrastructure.PostgreSQL.Repositories;
-using BlogService.Infrastructure.Storage.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Shared.Application.Interfaces.Mappers;
@@ -45,6 +45,15 @@ public static class BlogServiceApplicationExtensions
         // Контекст базы данных
         var connectionString = configuration.GetConnectionString("PostgreSQLConnectionString");
         services.AddDbContext<BlogServiceDbContext>(options => options.UseNpgsql(connectionString));
+        
+        services.AddSingleton<ICommentMessageProducer, KafkaProducer>();
+        services.AddHostedService<PublisherResponseWorker>();
+        
+        // services.AddStackExchangeRedisCache(options =>
+        // {
+        //     options.Configuration = "localhost:6379";
+        //     options.InstanceName = "Blog_";
+        // });
         
         return services;
     }
